@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next"
+import { GetStaticPaths, GetStaticProps } from "next"
 import { useSession } from "next-auth/client";
 import Head from "next/head";
 import Link from "next/link";
@@ -57,7 +57,14 @@ export default function PostPreview({post}: PostPreviewProps) {
   )
 }
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  // posso determinar aqui as rotas que ja vao ser montadas as primeiras
+  // vezes na build
+
+  //ex: return { paths: [{ params : { slug: 'produto-x'}}], fallback: 'blocking'}
+
+  //fallback : true('carrega pelo lado cliente'), false('se n for gerado ainda, retorna 404'), blocking ('espera carregar pelo lado do next')
+ 
   return {
     paths: [],
     fallback: 'blocking'
@@ -85,6 +92,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       post,
-    }
+    },
+    redirect: 60 * 30, // 30 minutes
   }
 }
